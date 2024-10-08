@@ -16,17 +16,17 @@ class BasketballModel:
 
     def train_and_validate_model(self, train_data, val_data):
         # Define the features for the model
-        self.chosenFeatures = ['TS%', 'USG%', 'MinutesPlayed', 'PointsPerGame', 'Rebounds', 'Assists', 'Steals', 'Blocks', 'Turnovers']
+        self.chosenFeatures = ["TS%", "USG%", "MinutesPlayed", "PointsPerGame", "Rebounds", "Assists", "Steals", "Blocks", "Turnovers"]
 
         # Prepare training and validation data
         X_train = train_data[self.chosenFeatures]
-        y_train = train_data['AllStarStatus']
+        y_train = train_data["AllStarStatus"]
         
         X_val = val_data[self.chosenFeatures]
-        y_val = val_data['AllStarStatus']
+        y_val = val_data["AllStarStatus"]
 
         # Impute missing values
-        self.imputer = SimpleImputer(strategy='constant', fill_value=0)
+        self.imputer = SimpleImputer(strategy="constant", fill_value=0)
         X_train_imputed = pd.DataFrame(self.imputer.fit_transform(X_train), columns=X_train.columns)
         X_val_imputed = pd.DataFrame(self.imputer.transform(X_val), columns=X_val.columns)
 
@@ -51,8 +51,8 @@ class BasketballModel:
 
     def test_model(self, test_data):
         # Prepare test data
-        X_test = test_data[['TS%', 'USG%', 'MinutesPlayed', 'PointsPerGame', 'Rebounds', 'Assists', 'Steals', 'Blocks', 'Turnovers']]
-        y_test = test_data['AllStarStatus']
+        X_test = test_data[["TS%", "USG%", "MinutesPlayed", "PointsPerGame", "Rebounds", "Assists", "Steals", "Blocks", "Turnovers"]]
+        y_test = test_data["AllStarStatus"]
 
         # Impute missing values
         X_test_imputed = pd.DataFrame(self.imputer.transform(X_test), columns=X_test.columns)
@@ -79,19 +79,19 @@ class BasketballModel:
         for n_neighbors in neighbors_range:
             # Train the KNN model with the current number of neighbors
             self.best_knn = KNeighborsClassifier(n_neighbors=n_neighbors, weights="distance")
-            self.best_knn.fit(self.scaler.transform(self.imputer.transform(train_data[self.chosenFeatures])), train_data['AllStarStatus'])
+            self.best_knn.fit(self.scaler.transform(self.imputer.transform(train_data[self.chosenFeatures])), train_data["AllStarStatus"])
             
             # Validate the model
             y_val_pred = self.best_knn.predict(self.scaler.transform(self.imputer.transform(val_data[self.chosenFeatures])))
-            val_accuracy = accuracy_score(val_data['AllStarStatus'], y_val_pred)
+            val_accuracy = accuracy_score(val_data["AllStarStatus"], y_val_pred)
             accuracies.append(val_accuracy)
 
         # Plotting the results
         plt.figure(figsize=(10, 6))
-        plt.plot(neighbors_range, accuracies, marker='o')
-        plt.title('KNN Accuracy vs Number of Neighbors')
-        plt.xlabel('Number of Neighbors')
-        plt.ylabel('Validation Accuracy')
+        plt.plot(neighbors_range, accuracies, marker="o")
+        plt.title("KNN Accuracy vs Number of Neighbors")
+        plt.xlabel("Number of Neighbors")
+        plt.ylabel("Validation Accuracy")
         plt.xticks(neighbors_range)
         plt.grid()
         plt.show()
@@ -99,7 +99,7 @@ class BasketballModel:
     def plot_confusion_matrix(self, test_data):
         # Prepare test data
         X_test = test_data[self.chosenFeatures]
-        y_test = test_data['AllStarStatus']
+        y_test = test_data["AllStarStatus"]
 
         # Impute missing values
         X_test_imputed = pd.DataFrame(self.imputer.transform(X_test), columns=X_test.columns)
@@ -115,10 +115,10 @@ class BasketballModel:
 
         # Plotting the confusion matrix
         plt.figure(figsize=(6, 6))
-        sns.heatmap(confusion_knn, annot=True, fmt='d', cmap='Blues', 
-                    xticklabels=['Not All-Star', 'Reserve', 'Starter'], 
-                    yticklabels=['Not All-Star', 'Reserve', 'Starter'])
-        plt.title('Confusion Matrix for KNN Model')
-        plt.xlabel('Predicted')
-        plt.ylabel('Actual')
+        sns.heatmap(confusion_knn, annot=True, fmt="d", cmap="Blues", 
+                    xticklabels=["Not All-Star", "Reserve", "Starter"], 
+                    yticklabels=["Not All-Star", "Reserve", "Starter"])
+        plt.title("Confusion Matrix for KNN Model")
+        plt.xlabel("Predicted")
+        plt.ylabel("Actual")
         plt.show()
