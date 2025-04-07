@@ -1,3 +1,6 @@
-# MLProject
+## MLProject
 
-Project about analysing basketball season statistics as features and seeing how they correalate to All-Star status in the NBA. This codebase is used as a storage for the data and code.
+This project focuses on analyzing basketball season statistics to evaluate their correlation with NBA All-Star selections. The is the repository for both the dataset and the accompanying machine learning code.
+
+The analysis employs Random Forest and K-Nearest Neighbors algorithms, utilizing key Python data science libraries such as pandas, NumPy, scikit-learn, and others.
+
